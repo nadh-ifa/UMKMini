@@ -13,12 +13,21 @@ import com.example.ukmini.ui.contact.ContactListScreen
 import com.example.ukmini.ui.home.HomeScreen
 import com.example.ukmini.viewmodel.AuthViewModel
 import com.example.ukmini.viewmodel.ContactViewModel
+import com.example.ukmini.ui.category.AddCategoryScreen
+import com.example.ukmini.ui.category.CategoryListScreen
+import com.example.ukmini.viewmodel.CategoryViewModel
+import com.example.ukmini.ui.screen.ProfileScreen
+import com.example.ukmini.ui.screen.EditProfileScreen
+import com.example.ukmini.viewmodel.ProfileViewModel
+
 
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
     val authViewModel: AuthViewModel = viewModel()
     val contactViewModel: ContactViewModel = viewModel()
+    val categoryViewModel: CategoryViewModel = viewModel()
+    val profileViewModel: ProfileViewModel = viewModel()
 
     val startDestination = if (authViewModel.isLoggedIn) "home" else "login"
 
@@ -66,6 +75,12 @@ fun AppNavigation() {
                 },
                 onOpenContacts = {
                     navController.navigate("contact_list")
+                },
+                onOpenCategories = {
+                    navController.navigate("category_list")
+                },
+                onOpenProfile = {
+                    navController.navigate("profile")
                 }
             )
         }
@@ -104,6 +119,45 @@ fun AppNavigation() {
             ContactDetailScreen(
                 contact = contactViewModel.selectedContact,
                 onBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        composable("category_list") {
+            CategoryListScreen(
+                categoryViewModel = categoryViewModel,
+                onAddCategoryClick = {
+                    navController.navigate("add_category")
+                },
+                onBackClick = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        composable("add_category") {
+            AddCategoryScreen(
+                categoryViewModel = categoryViewModel,
+                onBackClick = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        composable("profile") {
+            ProfileScreen(
+                viewModel = profileViewModel,
+                onEditClick = {
+                    navController.navigate("edit_profile")
+                }
+            )
+        }
+
+        composable("edit_profile") {
+            EditProfileScreen(
+                viewModel = profileViewModel,
+                onSaveSuccess = {
                     navController.popBackStack()
                 }
             )
